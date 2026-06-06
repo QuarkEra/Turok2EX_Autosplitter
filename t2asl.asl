@@ -41,7 +41,7 @@ startup
 
     // Settings
     // Settings defined here cannot be changed within code, only with the checkboxes within LiveSplit
-    settings.Add("cinematic_pause", false, "Pause During Cinematics");
+    settings.Add("cinematic_pause", false, "BETA: Pause During Cinematics");
     settings.SetToolTip("cinematic_pause", "Pauses the timer during all cinematics");
 
 	// IMPORTANT LOCATIONS
