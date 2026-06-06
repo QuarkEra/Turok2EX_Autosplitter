@@ -18,27 +18,10 @@ state("Turok2", "3.0.1336")
     string255 level : 0xBC3910, 0x0;
 }
 
-init
+startup
 {
     // Call this action to print debug messages, e.g. vars.debug("Split on map: " + current.level)
     vars.debug = (Action<string>)((msg) => print("[Turok 2 ASL] " + msg));
-
-  	/* DEPRECATED
-	Because 3.0.1334 and 3.0.1336 have the same memory size we can't use it to distinguish versions anymore
-	but the change in executable name means we can simplify by just looking at that. 
-	I'm leaving the old code in for now just in case things change again.
-  
-	// The version is found by checking how much memory the process reserves against known values
-    int memSize = modules.First().ModuleMemorySize;
-    vars.debug("memSize: " + memSize);
-    if (memSize == 9646080) version = "1.5.9";
-    else if (memSize == 14307328) version = "3.0.1334";
-    else 
-    {
-        version = "3.0.1334";
-        vars.debug("Couldn't detect version, defaulting to latest");
-    }
-	*/
 
 	// IMPORTANT LOCATIONS
 	vars.intro = "levels/(6)_cin_adon.map";					 // intro cinematic for timer start and the auto reset
@@ -91,6 +74,26 @@ init
 	vars.primagenCinematic = "levels/cinema_primagen.map";	// plays before and after the fight 
 	vars.light1 = "levels/Lightship_1.map";
 	vars.mother = "levels/Mother_Boss.map";
+}
+
+init
+{
+  	/* DEPRECATED
+	Because 3.0.1334 and 3.0.1336 have the same memory size we can't use it to distinguish versions anymore
+	but the change in executable name means we can simplify by just looking at that. 
+	I'm leaving the old code in for now just in case things change again.
+  
+	// The version is found by checking how much memory the process reserves against known values
+    int memSize = modules.First().ModuleMemorySize;
+    vars.debug("memSize: " + memSize);
+    if (memSize == 9646080) version = "1.5.9";
+    else if (memSize == 14307328) version = "3.0.1334";
+    else 
+    {
+        version = "3.0.1334";
+        vars.debug("Couldn't detect version, defaulting to latest");
+    }
+	*/
 }
 
 start
