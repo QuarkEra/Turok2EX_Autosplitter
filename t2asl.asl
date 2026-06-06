@@ -16,12 +16,18 @@ state("Turok2", "3.0.1336")
 {
     // 3.0.1336 (2026-03-18)
     string255 level : 0xBC3910, 0x0;
+	bool inCinematic : 0xBA2BAC;
 }
 
 startup
 {
     // Call this action to print debug messages, e.g. vars.debug("Split on map: " + current.level)
     vars.debug = (Action<string>)((msg) => print("[Turok 2 ASL] " + msg));
+
+    // Settings
+    // Settings defined here cannot be changed within code, only with the checkboxes within LiveSplit
+    settings.Add("cinematic_pause", false, "Pause During Cinematics");
+    settings.SetToolTip("cinematic_pause", "Pauses the timer during all cinematics");
 
 	// IMPORTANT LOCATIONS
 	vars.intro = "levels/(6)_cin_adon.map";					 // intro cinematic for timer start and the auto reset
@@ -74,6 +80,63 @@ startup
 	vars.primagenCinematic = "levels/cinema_primagen.map";	// plays before and after the fight 
 	vars.light1 = "levels/Lightship_1.map";
 	vars.mother = "levels/Mother_Boss.map";
+
+	vars.cinematic_maps = new string[] {
+		"levels/(1)_cin1_A.map", 
+		"levels/(2)_cin1_B.map",
+		"levels/(3)_cin1_C.map",
+		"levels/(4)_cin1_D.map",
+		"levels/(5)_cin_totem.map",
+		"levels/(6)_cin_adon.map",
+		"levels/cin-pri-cave.map",
+		"levels/cin-pri-city.map",
+		"levels/cin-pri-harbor.map",
+		"levels/cin-pri-hive.map",
+		"levels/cin-pri-marsh.map",
+		"levels/cinema_2_A.map",
+		"levels/cinema_2_dinosoid.map",
+		"levels/cinema_2_grave.map",
+		"levels/cinema_2_totem.map",
+		"levels/cinema_3_A.map",
+		"levels/cinema_3_C.map",
+		"levels/cinema_3_D.map",
+		"levels/cinema_3_F.map",
+		"levels/cinema_3_J.map",
+		"levels/cinema_3_totem.map",
+		"levels/cinema_4_A.map",
+		"levels/cinema_4_B.map",
+		"levels/cinema_4_D.map",
+		"levels/cinema_4_G.map",
+		"levels/cinema_4_H.map",
+		"levels/cinema_4_K.map",
+		"levels/cinema_4_totem.map",
+		"levels/cinema_5_A.map",
+		"levels/cinema_5_B.map",
+		"levels/cinema_5_E.map",
+		"levels/cinema_5_F.map",
+		"levels/cinema_5_I.map",
+		"levels/cinema_5_J.map",
+		"levels/cinema_5_top.map",
+		"levels/cinema_5_totem.map",
+		"levels/cinema_6_B.map",
+		"levels/cinema_6_C.map",
+		"levels/cinema_6_E.map",
+		"levels/cinema_6_G.map",
+		"levels/cinema_6_H.map",
+		"levels/cinema_6_I.map",
+		"levels/cinema_6_J.map",
+		"levels/cinema_ADONBLIVION1.map",
+		"levels/cinema_ADONBLIVION2.map",
+		"levels/cinema_END_1a2credits.map",
+		"levels/cinema_END_1b.map",
+		"levels/cinema_hubportal.map",
+		"levels/cinema_Oblivion1a(1).map",
+		"levels/cinema_primagen.map",
+		"levels/cinemaOblivion1b(2).map",
+		"levels/cinemaOblivion1c(5).map",
+		"levels/cinemaOblivion2(6).map",
+		"levels/ingame_deaths.map"
+	};
 }
 
 init
@@ -98,8 +161,28 @@ init
 
 start
 {
+	// Change TimingMethod to GameTime if we're pausing during cinematics, otherwise use RealTime
+	if (settings["cinematic_pause"]) { timer.CurrentTimingMethod = TimingMethod.GameTime; }
+	else { timer.CurrentTimingMethod = TimingMethod.RealTime; }
+
 	// Starts timer on intro cinematic after selecting difficulty
-	return (current.level == vars.intro);			 
+	return (current.level == vars.intro);
+}
+
+onStart
+{
+	// In testing there could be 0-2 frames between the timer starting and isLoading returning true
+	// so this is used to ensure the timer doesn't run up to 0.03 before the run even begins
+	if (settings["cinematic_pause"]) { timer.IsGameTimePaused = true; }
+}
+
+isLoading
+{
+	// It would be much cleaner to use this flag than to iterate over ~50 maps every tick
+	return current.inCinematic;
+
+	// If the flag doesn't work then we can check the array of known cinematic maps
+	//return Array.IndexOf(vars.cinematic_maps, current.level) != -1;
 }
 
 split
