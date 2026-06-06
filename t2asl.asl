@@ -1,3 +1,18 @@
+// Turok 2: Seeds of Evil Remastered Auto-Splitter
+// Supports Steam version, patches 1.5.9 (kex3 Legacy Release) and 3.0 (Default Public Version)
+// For issues and support please join the Turok Speedrunning Discord at https://discord.gg/C8vczW2
+
+// Game State Variables
+/*
+    string255 level
+        The filename of the currently loaded map, eg "levels/Adon_SavePortal.map"
+        Used to track the start of a run and all splits
+    bool inCinematic
+        I'm not entirely sure whether this flag is for cinematics, but it seems to always be 0 during normal gameplay 
+		and 1 during cinematics. Might be more accurate than tracking maps, and definitely more efficient.
+		If it doesn't work then it can be removed and we'll just iterate over the array of cinematic maps
+*/
+
 state("horus_x64", "1.5.9")
 {
     // 1.5.9 (Intel Patch) (2023-05-09)
