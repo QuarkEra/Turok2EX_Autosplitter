@@ -18,13 +18,8 @@ state("horus_x64", "1.5.9")
     // 1.5.9 (Intel Patch) (2023-05-09)
     // Game: 7544447072252135916
     // Windows: 7603634718733648236
-    string255 level : 0x00883F68, 0x0;
-}
-
-state("horus_Shipping_Playfab_Steam_x64", "3.0.1334") 
-{
-    // 3.0.1334 (2026-01-30)
-    string255 level : 0xBC3930, 0x0;
+    string255 level : 0x883F68, 0x0;
+	bool inCinematic : 0x865624;
 }
 
 state("Turok2", "3.0.1336") 
